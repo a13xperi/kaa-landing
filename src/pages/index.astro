@@ -7,6 +7,13 @@ import ContentMedia from '@components/ContentMedia.astro';
 import ExternalLink from '@components/ExternalLink.astro';
 import { Accordion, AccordionItem, Avatar, AvatarGroup, Tabs, TabsList, TabsTab, TabsPanel, Media, Card, Avatar } from 'accessible-astro-components';
 import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
+import { appUrls, typeformUrl, pricingTiers } from '../config';
+
+// Get pricing tier URLs
+const tier1Url = typeformUrl || appUrls.checkout(1);
+const tier2Url = typeformUrl || appUrls.checkout(2);
+const tier3Url = typeformUrl || appUrls.checkout(3);
+const contactUrl = typeformUrl || appUrls.contact;
 ---
 
 <DefaultLayout title="Home">
@@ -37,7 +44,7 @@ import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
                     <p>Ideal for communication intial ideas without technical requirements. Creates a mood board for overall landscape plan.</p>
-                    <a href="#">Contact us</a>
+                    <a href={contactUrl} data-track="services-ideation-contact">Contact us</a>
                 </TabsPanel>
                 <TabsPanel id="panel-2" labelledby="tab-2">
                     <h3>Conceptual Visualization</h3>
@@ -47,7 +54,7 @@ import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
                     <p>Combines real photos with creative sketching and AI editing to deliver more personalized visualizations.</p>
-                    <a href="#">Contact us</a>
+                    <a href={contactUrl} data-track="services-visualization-contact">Contact us</a>
                 </TabsPanel>
                 <TabsPanel id="panel-3" labelledby="tab-3">
                     <h3>Nature Realization</h3>
@@ -58,7 +65,7 @@ import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
                     <p>Highly realistic visualizations based on landscape and architectural plans and 3D modeling.</p>
-                    <a href="#">Contact us</a>
+                    <a href={contactUrl} data-track="services-realization-contact">Contact us</a>
                 </TabsPanel>
             </Tabs>
         </div>
@@ -81,21 +88,21 @@ import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
 
             <ul class="my-3 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <li>
-                    <Card imageComponent={gardenImage} url="#" title="Phase I">
+                    <Card imageComponent={gardenImage} url={tier1Url} title="Phase I" data-track="pricing-tier-1">
                         <h3>Single Render Package:</h3>
                         <p>Front or backyard specific area such as pool, solid roof, etc.</p>
                         <b class="text-2xl">$1,000 USD</b>
                     </Card>
                 </li>
                 <li>
-                    <Card imageComponent={gardenImage} url="#" title="Phase II">
+                    <Card imageComponent={gardenImage} url={tier2Url} title="Phase II" data-track="pricing-tier-2">
                         <h3>Standard Render Package:</h3>
                         <p>Full residential and landscape model, covering all designed elements.</p>
                         <b class="text-2xl">$2,000 USD</b>
                     </Card>
                 </li>
                 <li>
-                    <Card imageComponent={gardenImage} url="#" title="Phase III">
+                    <Card imageComponent={gardenImage} url={tier3Url} title="Phase III" data-track="pricing-tier-3">
                         <h3>Full Render Package:</h3>
                         <p>Extensive square footage residence and landscape model with/or difficult terrain.</p>
                         <b class="text-2xl">$3,000 USD</b>
@@ -126,7 +133,7 @@ import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
                 <p class="text-2xl">
                     This section addresses the most frequently asked questions about landscape and garden design to help you create your dream outdoor space.
                 </p>
-                <a class="button" href="#">Contact our design team</a>
+                <a class="button" href={contactUrl} data-track="faq-contact">Contact our design team</a>
             </div>
             <div class="space-content">
                 <Accordion>

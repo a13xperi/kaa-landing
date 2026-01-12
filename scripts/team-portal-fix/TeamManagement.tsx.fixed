@@ -1,0 +1,460 @@
+/**
+ * TeamManagement Component - FIXED VERSION
+ *
+ * Changes from original:
+ * 1. Uses useTeam hook instead of raw fetch()
+ * 2. Automatic cache invalidation on mutations
+ * 3. Proper loading and error states
+ * 4. Optimistic updates for better UX
+ *
+ * FILE: kaa-app/src/components/TeamManagement.tsx
+ */
+
+import React, { useState } from 'react';
+import {
+  useTeam,
+  useTeamMember,
+  useMemberProjects,
+  TeamMember,
+  TeamRole,
+} from '../hooks/useTeam';
+import './TeamManagement.css';
+
+// Role definitions with permissions
+const ROLE_PERMISSIONS: Record<TeamRole, string[]> = {
+  OWNER: [
+    'Full administrative access',
+    'Manage team members',
+    'Manage billing',
+    'Access all projects',
+    'Manage settings',
+  ],
+  ADMIN: [
+    'Manage projects',
+    'Manage clients',
+    'Invite team members',
+    'View billing',
+  ],
+  DESIGNER: [
+    'Edit assigned projects',
+    'Upload deliverables',
+    'Manage milestones',
+    'Communicate with clients',
+  ],
+  VIEWER: [
+    'View assigned projects',
+    'View deliverables',
+    'View milestones',
+  ],
+};
+
+const TeamManagement: React.FC = () => {
+  // Use the new team hook
+  const {
+    members,
+    invites,
+    stats,
+    isLoading,
+    error,
+    inviteMember,
+    updateRole,
+    removeMember,
+    reactivateMember,
+    cancelInvite,
+    resendInvite,
+    isInviting,
+    isUpdatingRole,
+    isRemoving,
+  } = useTeam();
+
+  // Local UI state
+  const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showRoleModal, setShowRoleModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState<TeamRole>('DESIGNER');
+  const [newRole, setNewRole] = useState<TeamRole>('DESIGNER');
+  const [actionError, setActionError] = useState<string | null>(null);
+
+  // Fetch selected member details
+  const { data: selectedMember } = useTeamMember(selectedMemberId || '');
+  const { data: memberProjects } = useMemberProjects(selectedMemberId || '');
+
+  // Handlers
+  const handleInvite = async () => {
+    if (!inviteEmail) return;
+
+    setActionError(null);
+    try {
+      await inviteMember({ email: inviteEmail, role: inviteRole });
+      setShowInviteModal(false);
+      setInviteEmail('');
+      setInviteRole('DESIGNER');
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to send invite');
+    }
+  };
+
+  const handleUpdateRole = async () => {
+    if (!selectedMemberId) return;
+
+    setActionError(null);
+    try {
+      await updateRole({ memberId: selectedMemberId, role: newRole });
+      setShowRoleModal(false);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to update role');
+    }
+  };
+
+  const handleRemoveMember = async (memberId: string) => {
+    if (!confirm('Are you sure you want to remove this team member?')) return;
+
+    setActionError(null);
+    try {
+      await removeMember(memberId);
+      if (selectedMemberId === memberId) {
+        setSelectedMemberId(null);
+      }
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to remove member');
+    }
+  };
+
+  const handleReactivate = async (memberId: string) => {
+    setActionError(null);
+    try {
+      await reactivateMember(memberId);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to reactivate member');
+    }
+  };
+
+  const handleCancelInvite = async (inviteId: string) => {
+    setActionError(null);
+    try {
+      await cancelInvite(inviteId);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to cancel invite');
+    }
+  };
+
+  const handleResendInvite = async (inviteId: string) => {
+    setActionError(null);
+    try {
+      await resendInvite(inviteId);
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Failed to resend invite');
+    }
+  };
+
+  const getRoleBadgeClass = (role: TeamRole) => {
+    const classes: Record<TeamRole, string> = {
+      OWNER: 'badge-owner',
+      ADMIN: 'badge-admin',
+      DESIGNER: 'badge-designer',
+      VIEWER: 'badge-viewer',
+    };
+    return `role-badge ${classes[role] || ''}`;
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="team-management loading">
+        <div className="loading-spinner"></div>
+        <p>Loading team data...</p>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="team-management error">
+        <p>Error loading team data: {error.message}</p>
+        <button onClick={() => window.location.reload()}>Retry</button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="team-management">
+      {/* Header */}
+      <header className="team-header">
+        <h1>Team Management</h1>
+        <button
+          className="btn-primary"
+          onClick={() => setShowInviteModal(true)}
+          disabled={isInviting}
+        >
+          + Invite Member
+        </button>
+      </header>
+
+      {/* Action Error */}
+      {actionError && (
+        <div className="error-banner" role="alert">
+          {actionError}
+          <button onClick={() => setActionError(null)}>×</button>
+        </div>
+      )}
+
+      {/* Stats Cards */}
+      {stats && (
+        <div className="stats-grid">
+          <div className="stat-card">
+            <span className="stat-value">{stats.totalMembers}</span>
+            <span className="stat-label">Total Members</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-value">{stats.activeMembers}</span>
+            <span className="stat-label">Active</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-value">{stats.pendingInvites}</span>
+            <span className="stat-label">Pending Invites</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-value">{stats.activeProjects}</span>
+            <span className="stat-label">Active Projects</span>
+          </div>
+        </div>
+      )}
+
+      <div className="team-content">
+        {/* Members List */}
+        <div className="members-panel">
+          <h2>Team Members</h2>
+
+          {members.length === 0 ? (
+            <p className="empty-state">No team members yet. Invite someone to get started!</p>
+          ) : (
+            <ul className="members-list">
+              {members.map((member) => (
+                <li
+                  key={member.id}
+                  className={`member-item ${selectedMemberId === member.id ? 'selected' : ''} ${member.status}`}
+                  onClick={() => setSelectedMemberId(member.id)}
+                >
+                  <div className="member-info">
+                    <span className="member-name">{member.name}</span>
+                    <span className="member-email">{member.email}</span>
+                  </div>
+                  <span className={getRoleBadgeClass(member.role)}>{member.role}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          {/* Pending Invites */}
+          {invites.length > 0 && (
+            <>
+              <h3>Pending Invites</h3>
+              <ul className="invites-list">
+                {invites.map((invite) => (
+                  <li key={invite.id} className="invite-item">
+                    <div className="invite-info">
+                      <span className="invite-email">{invite.email}</span>
+                      <span className={getRoleBadgeClass(invite.role)}>{invite.role}</span>
+                    </div>
+                    <div className="invite-actions">
+                      <button
+                        className="btn-small"
+                        onClick={() => handleResendInvite(invite.id)}
+                        title="Resend invite"
+                      >
+                        ↻
+                      </button>
+                      <button
+                        className="btn-small btn-danger"
+                        onClick={() => handleCancelInvite(invite.id)}
+                        title="Cancel invite"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </div>
+
+        {/* Member Details */}
+        <div className="detail-panel">
+          {selectedMember ? (
+            <>
+              <h2>{selectedMember.name}</h2>
+              <p className="member-email-detail">{selectedMember.email}</p>
+
+              <div className="detail-section">
+                <h3>Role</h3>
+                <div className="role-display">
+                  <span className={getRoleBadgeClass(selectedMember.role)}>
+                    {selectedMember.role}
+                  </span>
+                  <button
+                    className="btn-small"
+                    onClick={() => {
+                      setNewRole(selectedMember.role);
+                      setShowRoleModal(true);
+                    }}
+                    disabled={isUpdatingRole}
+                  >
+                    Change
+                  </button>
+                </div>
+              </div>
+
+              <div className="detail-section">
+                <h3>Permissions</h3>
+                <ul className="permissions-list">
+                  {ROLE_PERMISSIONS[selectedMember.role]?.map((perm, i) => (
+                    <li key={i}>✓ {perm}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="detail-section">
+                <h3>Assigned Projects ({memberProjects?.length || 0})</h3>
+                {memberProjects && memberProjects.length > 0 ? (
+                  <ul className="projects-list">
+                    {memberProjects.map((project: any) => (
+                      <li key={project.id}>{project.name || project.title}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="empty-state">No projects assigned</p>
+                )}
+              </div>
+
+              <div className="detail-actions">
+                {selectedMember.status === 'inactive' ? (
+                  <button
+                    className="btn-primary"
+                    onClick={() => handleReactivate(selectedMember.id)}
+                  >
+                    Reactivate Member
+                  </button>
+                ) : (
+                  <button
+                    className="btn-danger"
+                    onClick={() => handleRemoveMember(selectedMember.id)}
+                    disabled={isRemoving}
+                  >
+                    {isRemoving ? 'Removing...' : 'Remove Member'}
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="empty-detail">
+              <p>Select a team member to view details</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="modal-overlay" onClick={() => setShowInviteModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Invite Team Member</h2>
+
+            <div className="form-group">
+              <label htmlFor="invite-email">Email Address</label>
+              <input
+                id="invite-email"
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="colleague@example.com"
+                autoFocus
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="invite-role">Role</label>
+              <select
+                id="invite-role"
+                value={inviteRole}
+                onChange={(e) => setInviteRole(e.target.value as TeamRole)}
+              >
+                <option value="VIEWER">Viewer</option>
+                <option value="DESIGNER">Designer</option>
+                <option value="ADMIN">Admin</option>
+              </select>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => setShowInviteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleInvite}
+                disabled={!inviteEmail || isInviting}
+              >
+                {isInviting ? 'Sending...' : 'Send Invite'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Role Change Modal */}
+      {showRoleModal && (
+        <div className="modal-overlay" onClick={() => setShowRoleModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h2>Change Role</h2>
+
+            <div className="form-group">
+              <label htmlFor="new-role">New Role</label>
+              <select
+                id="new-role"
+                value={newRole}
+                onChange={(e) => setNewRole(e.target.value as TeamRole)}
+              >
+                <option value="VIEWER">Viewer</option>
+                <option value="DESIGNER">Designer</option>
+                <option value="ADMIN">Admin</option>
+                <option value="OWNER">Owner</option>
+              </select>
+            </div>
+
+            <div className="permissions-preview">
+              <h4>Permissions for {newRole}:</h4>
+              <ul>
+                {ROLE_PERMISSIONS[newRole]?.map((perm, i) => (
+                  <li key={i}>✓ {perm}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => setShowRoleModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn-primary"
+                onClick={handleUpdateRole}
+                disabled={isUpdatingRole}
+              >
+                {isUpdatingRole ? 'Updating...' : 'Update Role'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default TeamManagement;

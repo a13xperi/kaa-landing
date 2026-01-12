@@ -1,0 +1,198 @@
+/**
+ * TeamLogin Component - FIXED VERSION
+ *
+ * Changes from original:
+ * 1. Removed hardcoded demo credentials
+ * 2. Uses actual API authentication via /api/auth/login
+ * 3. Stores JWT token properly
+ * 4. Fetches team membership after login
+ *
+ * FILE: kaa-app/src/components/TeamLogin.tsx
+ */
+
+import React, { useState } from 'react';
+import './TeamLogin.css';
+
+interface TeamLoginProps {
+  onLogin: (teamMember: TeamMemberData) => void;
+  onBack: () => void;
+}
+
+interface TeamMemberData {
+  id: string;
+  userId: string;
+  name: string;
+  email: string;
+  role: string;
+  permissions: string[];
+}
+
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
+const TeamLogin: React.FC<TeamLoginProps> = ({ onLogin, onBack }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      // Step 1: Authenticate with the API
+      const authResponse = await fetch(`${API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!authResponse.ok) {
+        const authError = await authResponse.json().catch(() => ({}));
+        throw new Error(authError.message || 'Invalid credentials');
+      }
+
+      const authData = await authResponse.json();
+      const { token, user } = authData;
+
+      // Store the token
+      localStorage.setItem('token', token);
+      if (authData.refreshToken) {
+        localStorage.setItem('refreshToken', authData.refreshToken);
+      }
+
+      // Step 2: Verify user is a team member and get their membership
+      const memberResponse = await fetch(`${API_BASE}/api/team/members/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!memberResponse.ok) {
+        // User authenticated but isn't a team member
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        throw new Error('You are not a team member. Please contact your administrator.');
+      }
+
+      const memberData = await memberResponse.json();
+
+      // Step 3: Success - pass data to parent
+      onLogin({
+        id: memberData.member.id,
+        userId: memberData.member.userId,
+        name: user.name || memberData.member.name || email.split('@')[0],
+        email: user.email,
+        role: memberData.member.role,
+        permissions: memberData.permissions ? Object.keys(memberData.permissions).filter(k => memberData.permissions[k]) : [],
+      });
+
+    } catch (err) {
+      console.error('Team login error:', err);
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="team-login">
+      <div className="login-container">
+        <div className="login-header">
+          <button className="back-button" onClick={onBack} type="button">
+            ← Back to Home
+          </button>
+          <div className="header-content">
+            <span className="login-icon">🎯</span>
+            <h1>Team Dashboard</h1>
+            <p>Access your assigned projects and client communications</p>
+          </div>
+        </div>
+
+        <div className="login-form-container">
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
+                autoFocus
+                autoComplete="email"
+              />
+              <p className="field-help">Use your team member email address</p>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                required
+                autoComplete="current-password"
+              />
+              <p className="field-help">Enter your account password</p>
+            </div>
+
+            {error && (
+              <div className="error-message" role="alert">
+                <span className="error-icon">⚠️</span>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="login-button"
+              disabled={loading || !email || !password}
+            >
+              {loading ? (
+                <>
+                  <span className="loading-spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                <>Access My Projects →</>
+              )}
+            </button>
+          </form>
+
+          <div className="help-section">
+            <p>
+              <strong>Forgot password?</strong>{' '}
+              <a href="/forgot-password">Reset it here</a>
+            </p>
+            <p>
+              <strong>Need access?</strong> Contact your team administrator.
+            </p>
+          </div>
+        </div>
+
+        <div className="security-features">
+          <div className="security-item">
+            <span className="security-icon">🔐</span>
+            <span>Secure Authentication</span>
+          </div>
+          <div className="security-item">
+            <span className="security-icon">👥</span>
+            <span>Role-Based Access</span>
+          </div>
+          <div className="security-item">
+            <span className="security-icon">📊</span>
+            <span>Activity Tracking</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TeamLogin;

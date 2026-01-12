@@ -2,6 +2,7 @@
 import { Icon } from 'astro-icon/components';
 import { Image } from 'astro:assets';
 import gardenImage from '../assets/images/landscape/garden-1-small.jpg';
+import { appUrls, typeformUrl } from '../config';
 
 /**
  * Hero Component
@@ -16,6 +17,10 @@ interface Props {
 }
 
 const { src = '/astronaut-hero-img.webp' }: Props = Astro.props;
+
+// CTA URLs - link to app registration/contact
+const learnMoreUrl = '#services'; // Scroll to services section
+const getStartedUrl = typeformUrl || appUrls.contact;
 ---
 
 <section class="hero">
@@ -33,11 +38,11 @@ const { src = '/astronaut-hero-img.webp' }: Props = Astro.props;
                     </h1>
                     <h2 class="text-center text-4xl md:text-left lg:text-6xl">Karen Aitken & Associates</h2>
                     <div class="flex flex-col gap-3 min-[500px]:flex-row">
-                        <a class="button has-icon" href="#">
+                        <a class="button has-icon" href={learnMoreUrl} data-track="hero-learn-more">
                             <Icon name="lucide:leaf" />
                             LEARN MORE
                         </a>
-                        <a class="button has-icon color-secondary" href="#">
+                        <a class="button has-icon color-secondary" href={getStartedUrl} data-track="hero-get-started">
                             <Icon name="lucide:flower" />
                             GET STARTED
                         </a>
