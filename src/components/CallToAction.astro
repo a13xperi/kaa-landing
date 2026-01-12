@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { typeformUrl, appUrls } from '../config';
 
 /**
  * CallToAction Component
@@ -9,24 +10,29 @@ import { Icon } from 'astro-icon/components';
 interface Props {
     /**
      * The title text to display
-     * @default "Get this theme on GitHub"
+     * @default "Connect with us"
      */
     title?: string;
     /**
      * The URL the button should link to
-     * @default "https://github.com/incluud/accessible-astro-starter"
+     * @default Typeform URL or app contact URL
      */
     link?: string;
     /**
      * The text to display on the button
-     * @default "Get Started"
+     * @default "Get Started."
      */
     linkText?: string;
 }
 
+// Default to Typeform if available, otherwise use app contact
+const defaultLink = typeformUrl
+    ? `${typeformUrl}?typeform-source=www.karenaitkenassociates.com`
+    : appUrls.contact;
+
 const {
     title = 'Connect with us',
-    link = 'https://form.typeform.com/to/Gqmo3i?typeform-source=www.karenaitkenassociates.com',
+    link = defaultLink,
     linkText = 'Get Started.'
 } = Astro.props;
 ---
@@ -34,7 +40,7 @@ const {
 <div class="container">
     <div class="call-to-action mt-24 mb-32 flex flex-col items-center gap-12 rounded-xl px-12 py-20 md:px-24">
         <h2 class="text-center text-3xl md:text-6xl">{title}</h2>
-        <a href={link} class="text-center text-2xl">
+        <a href={link} class="text-center text-2xl" data-track="footer-cta">
             {linkText}
             <Icon name="lucide:arrow-right" />
         </a>
