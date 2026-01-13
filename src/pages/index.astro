@@ -20,91 +20,90 @@ const contactUrl = typeformUrl || appUrls.contact;
     <Hero />
     <section class="bg-neutral-200 py-32">
         <ContentMedia imgSrc="garden-2-small.jpg" reverseImg={true}>
-            <h2>Designing beautiful gardens is a business we love...</h2>
+            <h2>We don't just design gardens. We craft spaces where your family will make memories...</h2>
             <p class="text-2xl">
-                Our reputation as a premiere landscape architecture firm is based upon our responsiveness to each client's unique project needs. We take pride
-                in creating thoughtful, innovative, and environmentally conscious landscapes which will serve our clients for years to come.
+                Imagine Sunday mornings with coffee in a garden that feels like your own private sanctuary. Picture your kids discovering wonder in every bloom and butterfly. With Sage as your guide, we transform your outdoor space into the backdrop for your family's happiest moments.
             </p>
         </ContentMedia>
 
         <div class="px-32 pt-12">
             <Tabs>
                 <TabsList>
-                    <TabsTab id="tab-1" controls="panel-1" selected>Design Ideation</TabsTab>
-                    <TabsTab id="tab-2" controls="panel-2">Conceptual Visualization</TabsTab>
-                    <TabsTab id="tab-3" controls="panel-3">Nature Realization</TabsTab>
+                    <TabsTab id="tab-1" controls="panel-1" selected>Dream Discovery</TabsTab>
+                    <TabsTab id="tab-2" controls="panel-2">Vision Crafting</TabsTab>
+                    <TabsTab id="tab-3" controls="panel-3">Magic Made Real</TabsTab>
                 </TabsList>
 
                 <TabsPanel id="panel-1" labelledby="tab-1" selected>
-                    <h3>Design Ideation</h3>
+                    <h3>Dream Discovery</h3>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
-                    <p>Ideal for communication intial ideas without technical requirements. Creates a mood board for overall landscape plan.</p>
-                    <a href={contactUrl} data-track="services-ideation-contact">Contact us</a>
+                    <p>Tell Sage about the feeling you want—cozy family dinners under string lights, peaceful morning meditation, kids running through garden paths. We'll capture your dreams in a visual mood board that feels like home.</p>
+                    <a href={contactUrl} data-track="services-ideation-contact">Share your dream</a>
                 </TabsPanel>
                 <TabsPanel id="panel-2" labelledby="tab-2">
-                    <h3>Conceptual Visualization</h3>
+                    <h3>Vision Crafting</h3>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
-                    <p>Combines real photos with creative sketching and AI editing to deliver more personalized visualizations.</p>
-                    <a href={contactUrl} data-track="services-visualization-contact">Contact us</a>
+                    <p>Watch your backyard transform before your eyes. We blend your actual space with artistic imagination, so you can already feel the joy of hosting friends and watching your family enjoy every corner.</p>
+                    <a href={contactUrl} data-track="services-visualization-contact">See the possibilities</a>
                 </TabsPanel>
                 <TabsPanel id="panel-3" labelledby="tab-3">
-                    <h3>Nature Realization</h3>
+                    <h3>Magic Made Real</h3>
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-4">
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                         <Media class="rounded-lg" src="garden-2-small.jpg" />
                     </div>
-                    <p>Highly realistic visualizations based on landscape and architectural plans and 3D modeling.</p>
-                    <a href={contactUrl} data-track="services-realization-contact">Contact us</a>
+                    <p>The moment it becomes real—breathtakingly detailed plans that bring your family's outdoor sanctuary to life. Every path, every bloom, every cozy corner designed for decades of togetherness.</p>
+                    <a href={contactUrl} data-track="services-realization-contact">Begin your journey</a>
                 </TabsPanel>
             </Tabs>
         </div>
     </section>
     <section class="mt-32 mb-32">
         <div class="container">
-            <h2 class="mb-16 text-6xl">Our clients love us</h2>
+            <h2 class="mb-16 text-6xl">Families who found their happy place</h2>
             <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-4">
-                <Counter count="900+" title="Projects" sub="Completed" />
-                <Counter count="25K+" title="Landscapes" sub="Designed" />
-                <Counter count="4M+" title="Plans" sub="Planted" />
-                <Counter count="5K+" title="Persons" sub="Happy" />
+                <Counter count="900+" title="Family Sanctuaries" sub="Created" />
+                <Counter count="25K+" title="Dreams" sub="Brought to Life" />
+                <Counter count="4M+" title="Moments of Joy" sub="Growing Daily" />
+                <Counter count="5K+" title="Families" sub="In Love with Home" />
             </div>
         </div>
     </section>
 
     <section class="mt-32 mb-32">
         <div class="container bg-neutral-100">
-            <h2 class="mb-16 text-6xl">Starting Plans</h2>
+            <h2 class="mb-16 text-6xl">Begin Your Dreamscape Journey</h2>
 
             <ul class="my-3 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <li>
-                    <Card imageComponent={gardenImage} url={tier1Url} title="Phase I" data-track="pricing-tier-1">
-                        <h3>Single Render Package:</h3>
-                        <p>Front or backyard specific area such as pool, solid roof, etc.</p>
+                    <Card imageComponent={gardenImage} url={tier1Url} title="The First Spark" data-track="pricing-tier-1">
+                        <h3>Cozy Corner Magic:</h3>
+                        <p>Transform one special spot—a peaceful patio retreat, a poolside paradise, or a secret garden nook where your family gathers.</p>
                         <b class="text-2xl">$1,000 USD</b>
                     </Card>
                 </li>
                 <li>
-                    <Card imageComponent={gardenImage} url={tier2Url} title="Phase II" data-track="pricing-tier-2">
-                        <h3>Standard Render Package:</h3>
-                        <p>Full residential and landscape model, covering all designed elements.</p>
+                    <Card imageComponent={gardenImage} url={tier2Url} title="The Full Vision" data-track="pricing-tier-2">
+                        <h3>Complete Family Haven:</h3>
+                        <p>Your entire outdoor space reimagined—every corner designed for connection, play, and those quiet moments that become treasured memories.</p>
                         <b class="text-2xl">$2,000 USD</b>
                     </Card>
                 </li>
                 <li>
-                    <Card imageComponent={gardenImage} url={tier3Url} title="Phase III" data-track="pricing-tier-3">
-                        <h3>Full Render Package:</h3>
-                        <p>Extensive square footage residence and landscape model with/or difficult terrain.</p>
+                    <Card imageComponent={gardenImage} url={tier3Url} title="The Grand Dream" data-track="pricing-tier-3">
+                        <h3>Estate of Wonder:</h3>
+                        <p>For larger properties and ambitious dreams—a comprehensive sanctuary where generations of your family will gather, celebrate, and belong.</p>
                         <b class="text-2xl">$3,000 USD</b>
                     </Card>
                 </li>
@@ -114,14 +113,13 @@ const contactUrl = typeformUrl || appUrls.contact;
 
     <ContentMedia imgSrc="garden-2-small.jpg">
         <Avatar
-            title="Jack Smith"
-            subtitle="Consultant"
+            title="The Martinez Family"
+            subtitle="Homeowners, Pasadena"
             img="https://plus.unsplash.com/premium_photo-1672239496290-5061cfee7ebb?auto=format&fit=crop&q=100&w=800"
         />
         <p class="text-3xl">
             <i
-                >"Karen is simply the BEST. She has the vision as soon as she walks on the project site. I truly believe homes sell more because of Karen's
-                design and creativity.""</i
+                >"Sage didn't just design our backyard—they understood how we wanted to feel in it. Now our kids play outside every day, we host family dinners under the pergola, and Sunday mornings with coffee in our garden have become sacred. This is where our best memories are made."</i
             >
         </p>
     </ContentMedia>
@@ -129,68 +127,47 @@ const contactUrl = typeformUrl || appUrls.contact;
     <section class="my-64 bg-neutral-300 py-32">
         <div class="container grid grid-cols-1 gap-12 md:grid-cols-2">
             <div class="flex flex-col items-start gap-4">
-                <h2 class="text-6xl">FAQ</h2>
+                <h2 class="text-6xl">Questions About Your Dreamscape</h2>
                 <p class="text-2xl">
-                    This section addresses the most frequently asked questions about landscape and garden design to help you create your dream outdoor space.
+                    We know turning your backyard into a family sanctuary feels like a big step. Here's everything you need to know about bringing your outdoor dreams to life.
                 </p>
-                <a class="button" href={contactUrl} data-track="faq-contact">Contact our design team</a>
+                <a class="button" href={contactUrl} data-track="faq-contact">Talk to Sage</a>
             </div>
             <div class="space-content">
                 <Accordion>
-                    <AccordionItem name="exclusive" title="What key factors should I consider when planning my landscape design?" open>
+                    <AccordionItem name="exclusive" title="How does Sage understand what my family really wants?" open>
                         <p>
-                            When planning your landscape design, consider your soil type, local climate, property size, and intended use of the space. Think
-                            about whether you want areas for entertaining, relaxing, gardening, or children's play. Also evaluate sunlight patterns, drainage
-                            needs, and how the design will complement your home's architecture. Understanding these factors upfront helps create a functional
-                            and beautiful outdoor space.
+                            We start by listening—not just about plants and patios, but about how you want to feel in your space. Do you dream of lazy Sunday brunches outdoors? A safe place for kids to explore nature? Quiet evening moments under the stars? Sage helps you articulate those feelings and translates them into a space that brings your family together in all the right ways.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="How do I choose the right plants for my garden?">
+                    <AccordionItem name="exclusive" title="What if I don't know exactly what I want?">
                         <p>
-                            Select plants based on your USDA planting zone and local climate conditions. Consider the amount of sunlight each area receives,
-                            your soil type, and water requirements. Native plants are often the best choice as they're adapted to local conditions and require
-                            less maintenance. Group plants with similar needs together and think about seasonal interest - choose a mix of evergreens, flowering
-                            plants, and foliage that provides year-round appeal.
+                            That's perfectly okay—most families don't! You might just know you want to spend more time outside together, or that your current backyard doesn't bring you joy. Sage is here to uncover what will make your heart sing. Through our Dream Discovery process, we'll explore possibilities you might never have imagined. Your only job is to dream; we'll handle the rest.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="What does the landscape design process typically involve?">
+                    <AccordionItem name="exclusive" title="How long until we can start making memories in our new space?">
                         <p>
-                            The landscape design process begins with an initial consultation to discuss your vision and needs. This is followed by a thorough
-                            site analysis examining terrain, soil, climate, and existing vegetation. Next comes concept development with preliminary designs,
-                            then detailed planning including specific plant and material selections. Finally, the installation phase brings your design to life
-                            with proper planting and construction.
+                            The journey from dream to reality varies, but Sage designs with your life in mind. Our visualization process lets you "feel" your new space early—many families say they start getting excited the moment they see their first rendering. From initial consultation to final plans, expect a thoughtful process that results in decades of family joy.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="How can I make my landscape design more sustainable?">
+                    <AccordionItem name="exclusive" title="Will our garden be good for the environment too?">
                         <p>
-                            Create a sustainable landscape by using native plants that require less water and maintenance, implementing efficient irrigation
-                            systems like drip irrigation, and incorporating rain gardens to manage stormwater runoff. Consider xeriscaping techniques for
-                            drought-resistant areas, use organic mulch to retain moisture, and select durable materials for hardscaping that won't need frequent
-                            replacement.
+                            Creating spaces your family loves and nurturing the planet go hand in hand. Sage designs with native California plants that thrive naturally, water-wise features that save resources, and habitats that welcome butterflies, hummingbirds, and other garden friends. Your children will learn to love nature in a garden that loves it back.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="What maintenance considerations should I keep in mind?">
+                    <AccordionItem name="exclusive" title="We're busy—will this garden need constant maintenance?">
                         <p>
-                            Plan for ongoing maintenance from the design stage by choosing low-maintenance plants and durable materials. Ensure easy access to
-                            all garden areas for pruning and care. Consider plant growth patterns to avoid overcrowding, incorporate mulch to suppress weeds and
-                            retain moisture, and think about automated irrigation systems. Even low-maintenance gardens need some care, so budget for regular
-                            watering, pruning, and seasonal cleanups.
+                            We design for real family life, not showpiece gardens that demand your weekends. Sage creates beautiful, resilient spaces that grow more lovely with time—not more demanding. We choose plants that thrive together, materials that weather gracefully, and layouts that make care simple. Your garden should give you time together, not take it away.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="How much should I expect to spend on landscape design?">
+                    <AccordionItem name="exclusive" title="Is investing in landscape design really worth it?">
                         <p>
-                            Landscape design costs vary widely based on the size, scope, and complexity of your project. Basic designs like simple patios may
-                            start around $1,500, while comprehensive master plans including outdoor kitchens, lighting, and custom features can cost $5,000 or
-                            more. Generally, design fees represent 2-4% of your total construction budget. Remember that professional design is an investment
-                            that maximizes the value of your construction dollars and helps avoid costly mistakes.
+                            Think of it this way: you're not paying for plants and drawings—you're investing in thousands of family moments. Morning coffee in your garden, birthday parties in your backyard, kids discovering ladybugs, stargazing from your patio. These memories are priceless, and professional design ensures your space will nurture them for decades.
                         </p>
                     </AccordionItem>
-                    <AccordionItem name="exclusive" title="Do I need to have a clear vision before hiring a landscape designer?">
+                    <AccordionItem name="exclusive" title="Can Sage help with challenging spaces or unusual ideas?">
                         <p>
-                            No, you don't need to know exactly what you want before hiring a designer. Simply wanting to improve your outdoor space is enough to
-                            get started. The design process will help you explore options, define goals, and discover features you may not have considered. A
-                            good designer will guide you through understanding what's possible on your property and what works best for your lifestyle, family
-                            needs, and budget.
+                            Absolutely! Slopes, small yards, unusual shapes—Sage sees challenges as opportunities for magic. Want a secret garden path for your kids? A meditation corner hidden by fragrant jasmine? A play area that looks like an enchanted forest? The more unique your dream, the more excited we get. There are no ordinary yards, only undiscovered sanctuaries.
                         </p>
                     </AccordionItem>
                 </Accordion>
