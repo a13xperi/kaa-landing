@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Claude Code local settings (contains API keys)
+.claude/
